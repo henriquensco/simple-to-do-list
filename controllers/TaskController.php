@@ -6,11 +6,29 @@ use app\models\TaskForm;
 use app\models\TaskStatus;
 use app\services\TaskService;
 use Yii;
+use yii\filters\AccessControl;
+use yii\filters\VerbFilter;
 use yii\helpers\ArrayHelper;
 use yii\web\Controller;
 
 class TaskController extends Controller
 {
+  public function behaviors()
+    {
+        return [
+            'access' => [
+                'class' => AccessControl::className(),
+                'only' => ['index', 'view', 'update', 'delete'],
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'roles' => ['@'],
+                    ],
+                ],
+            ],
+        ];
+    }
+
   public function actionIndex()
   {
     $taskService = new TaskService();

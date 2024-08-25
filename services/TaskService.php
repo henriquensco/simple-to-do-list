@@ -7,11 +7,18 @@ use Yii;
 
 class TaskService
 {
-  protected Task $taskModel;
+  public Task $taskModel;
+  public $userId;
 
-  public function __construct()
+  public function __construct(
+    int $userId = null
+  )
   {
     $this->taskModel = new Task();
+    
+    $this->userId = $userId ?? Yii::$app->user->identity->id;
+
+    $this->taskModel->user_id = $this->userId;
   }
 
   public function list($filters = ['status_id' => null], $orderBy = [])
@@ -34,7 +41,7 @@ class TaskService
     }
 
     $filter = [];
-    $filter['user_id'] = $this->getUser()->id;
+    $filter['user_id'] = $this->userId;
    
     if ($filters['status_id'] == null) {
       unset($filters['status_id']);
@@ -59,7 +66,7 @@ class TaskService
   {
     return $this->taskModel->find()->where([
       'id' => $id,
-      'user_id' => $this->getUser()->id
+      'user_id' => $this->userId
     ])->one();
   }
 
@@ -69,14 +76,11 @@ class TaskService
       return ['success' => false, 'data' => 'Expiration date must be greater than today'];
     }
 
-    $data->user_id = $this->getUser()->id;
-
     $this->taskModel->title = $data->title;
     $this->taskModel->priority = $data->priority;
     $this->taskModel->status_id = $data->status_id;
     $this->taskModel->description = $data->description;
     $this->taskModel->expiration_date = $data->expiration_date;
-    $this->taskModel->user_id = $data->user_id;
 
     if (!$this->taskModel->save()) {
       return ['success' => false, 'data' => $this->taskModel->getErrors()];
@@ -99,7 +103,7 @@ class TaskService
     $task->status_id = $data->status_id;
     $task->description = $data->description;
     $task->expiration_date = $data->expiration_date;
-    $task->user_id = $this->getUser()->id;
+    $task->user_id = $this->userId;
 
     if (!$task->save()) {
       return ['success' => false, 'data' => $task->getErrors()];
@@ -119,11 +123,6 @@ class TaskService
     $task->delete();
 
     return ['success' => true, 'data' => 'Task deleted'];
-  }
-
-  private function getUser()
-  {
-    return Yii::$app->user->identity;
   }
 
   private function validateExpirationDate($expirationDate)

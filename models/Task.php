@@ -2,6 +2,7 @@
 
 namespace app\models;
 
+use DateTime;
 use Yii;
 
 /**
@@ -86,13 +87,9 @@ class Task extends \yii\db\ActiveRecord
 
     public function beforeSave($insert)
     {
-        //$dateTime = new DateTime('now');
+        $dateTime = new DateTime('now');
         if (parent::beforeSave($insert)) {
-            if ($this->isNewRecord) {
-                $this->user_id = Yii::$app->user->id;
-            }
-            //$this->updated_at = $dateTime->format('Y-m-d H:i:s');
-            //2024-08-20 23:21:42
+            $this->updated_at = $dateTime->format('Y-m-d H:i:s');
             return true;
         }
         return false;

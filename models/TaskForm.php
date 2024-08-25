@@ -23,7 +23,7 @@ class TaskForm extends Model
   public function rules()
   {
     return [
-      [['title', 'priority', 'status_id', 'description', 'expiration_date'], 'required'],
+      [['title', 'priority', 'status_id', 'description', 'expiration_date', 'user_id'], 'required'],
     ];
   }
 }

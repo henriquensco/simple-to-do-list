@@ -45,7 +45,8 @@ tbody tr td:last-child {
                 <div class="input-group mb-3">
                     <label class="input-group-text" for="filters">Priority</label>
                     <select class="form-select" id="filters_status" name="filters[priority]">
-                        <option value="" selected>All priorities</option>
+
+                        <option value="" <?= $filters['priority'] == null ? 'selected' : '' ?>>All priorities</option>
                         <option value="0" <?= $filters['priority'] == '0' ? 'selected' : '' ?>>0</option>
                         <option value="1" <?= $filters['priority'] == '1' ? 'selected' : '' ?>>1</option>
                         <option value="2" <?= $filters['priority'] == '2' ? 'selected' : '' ?>>2</option>

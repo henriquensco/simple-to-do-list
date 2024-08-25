@@ -1,5 +1,0 @@
-actor: TestTaskTester
-suite_namespace: \TestTask
-modules:
-    # enable helpers as array
-    enabled: []

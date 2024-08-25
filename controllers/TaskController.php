@@ -34,7 +34,7 @@ class TaskController extends Controller
     $taskService = new TaskService();
 
     $orderBy = Yii::$app->request->get('orderBy', 'expiration_date_asc');
-    $filters = Yii::$app->request->get('filters', ['status_id' => null, 'priority' => 0]);
+    $filters = Yii::$app->request->get('filters', ['status_id' => null, 'priority' => null]);
 
     $taskStatus = TaskStatus::find()->all();
 

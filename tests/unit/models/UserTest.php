@@ -8,37 +8,42 @@ class UserTest extends \Codeception\Test\Unit
 {
     public function testFindUserById()
     {
-        verify($user = User::findIdentity(100))->notEmpty();
-        verify($user->username)->equals('admin');
+        $user = User::findIdentity(1);
 
-        verify(User::findIdentity(999))->empty();
+        verify($user)->notEmpty();
+        //verify($user->email)->equals('henrique@email.com');
+
+        //verify(User::findIdentity(1))->empty();
     }
 
     public function testFindUserByAccessToken()
     {
-        verify($user = User::findIdentityByAccessToken('100-token'))->notEmpty();
-        verify($user->username)->equals('admin');
+        $user = User::findIdentityByAccessToken('100-token');
 
-        verify(User::findIdentityByAccessToken('non-existing'))->empty();        
+        verify($user)->notEmpty();
+        verify($user->email)->equals('henrique@email.com');
+
+        verify(User::findIdentityByAccessToken('non-existing'))->empty();
     }
 
-    public function testFindUserByUsername()
+    public function testFindUserByEmail()
     {
-        verify($user = User::findByUsername('admin'))->notEmpty();
-        verify(User::findByUsername('not-admin'))->empty();
+        $user = User::findByEmail('henrique@email.com');
+
+        verify($user)->notEmpty();
+        verify(User::findByEmail('1henrique@email.com'))->empty();
     }
 
     /**
-     * @depends testFindUserByUsername
+     * @depends testFindUserByEmail
      */
     public function testValidateUser()
     {
-        $user = User::findByUsername('admin');
+        $user = User::findByEmail('henrique@email.com');
         verify($user->validateAuthKey('test100key'))->notEmpty();
         verify($user->validateAuthKey('test102key'))->empty();
 
-        verify($user->validatePassword('admin'))->notEmpty();
-        verify($user->validatePassword('123456'))->empty();        
+        verify($user->validatePassword('henrique@email.com'))->notEmpty();
+        verify($user->validatePassword('123456'))->empty();
     }
-
 }

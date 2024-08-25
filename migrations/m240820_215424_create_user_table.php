@@ -19,6 +19,8 @@ class m240820_215424_create_user_table extends Migration
             'last_name' => $this->string()->notNull(),
             'email' => $this->string()->notNull(),
             'password' => $this->string()->notNull(),
+            'access_token' => $this->string(),
+            'auth_key' => $this->string(),
             'created_at' => $this->dateTime()->defaultExpression('CURRENT_TIMESTAMP'),
             'updated_at' => $this->dateTime()->defaultValue(null)->append('ON UPDATE CURRENT_TIMESTAMP')
         ]);

@@ -15,6 +15,8 @@ use yii\web\IdentityInterface;
  * @property string $last_name
  * @property string $email
  * @property string $password
+ * @property string $access_token
+ * @property string $auth_key
  * @property string $created_at
  * @property string|null $updated_at
  *
@@ -37,7 +39,7 @@ class User extends ActiveRecord implements IdentityInterface
     {
         return [
             [['first_name', 'last_name', 'email', 'password'], 'required'],
-            [['created_at', 'updated_at'], 'safe'],
+            [['access_token', 'auth_key'], ['created_at', 'updated_at'], 'safe'],
             [['first_name', 'last_name', 'email', 'password'], 'string', 'max' => 255],
         ];
     }
@@ -53,6 +55,8 @@ class User extends ActiveRecord implements IdentityInterface
             'last_name' => 'Last Name',
             'email' => 'Email',
             'password' => 'Password',
+            'access_token' => 'Access token',
+            'auth_key' => 'Auth key',
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',
         ];
@@ -95,23 +99,24 @@ class User extends ActiveRecord implements IdentityInterface
 
     public function getAuthKey()
     {
-        //return $this->auth_key;
+        return $this->auth_key;
     }
 
     public function validateAuthKey($authKey)
     {
-        //return $this->auth_key === $authKey;
+        return $this->auth_key === $authKey;
     }
 
     public function beforeSave($insert)
     {
         $dateTime = new DateTime('now');
+
         if (parent::beforeSave($insert)) {
             if ($this->isNewRecord) {
                 $this->password = Yii::$app->security->generatePasswordHash($this->password);
             }
             $this->updated_at = $dateTime->format('Y-m-d H:i:s');
-            //2024-08-20 23:21:42
+
             return true;
         }
         return false;

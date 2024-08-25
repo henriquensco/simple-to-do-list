@@ -5,29 +5,35 @@ namespace app\controllers;
 use app\models\TaskForm;
 use app\models\TaskStatus;
 use app\services\TaskService;
+use app\services\TaskStatusService;
 use Yii;
 use yii\filters\AccessControl;
-use yii\filters\VerbFilter;
-use yii\helpers\ArrayHelper;
 use yii\web\Controller;
 
 class TaskController extends Controller
 {
+  protected TaskService $taskService;
+
+  function __construct()
+  {
+    $this->taskService = new TaskService();
+  }
+
   public function behaviors()
-    {
-        return [
-            'access' => [
-                'class' => AccessControl::className(),
-                'only' => ['index', 'view', 'update', 'delete'],
-                'rules' => [
-                    [
-                        'allow' => true,
-                        'roles' => ['@'],
-                    ],
-                ],
-            ],
-        ];
-    }
+  {
+    return [
+      'access' => [
+        'class' => AccessControl::className(),
+        'only' => ['index', 'view', 'update', 'delete'],
+        'rules' => [
+          [
+            'allow' => true,
+            'roles' => ['@'],
+          ],
+        ],
+      ],
+    ];
+  }
 
   public function actionIndex()
   {
@@ -48,13 +54,10 @@ class TaskController extends Controller
 
   public function actionCreate()
   {
-    $taskService = new TaskService();
     $model = new TaskForm();
 
-    $taskStatus = ArrayHelper::map(TaskStatus::find()->all(), 'id', 'title');
-
     if ($model->load(Yii::$app->request->post())) {
-      $createTask = $taskService->create($model);
+      $createTask = $this->taskService->create($model);
 
       if ($createTask['success']) {
         Yii::$app->session->setFlash('success', 'New task created');
@@ -64,18 +67,19 @@ class TaskController extends Controller
       Yii::$app->session->setFlash('error', $createTask['data']);
     }
 
+    $taskStatusService = new TaskStatusService();
+
     return $this->render('create', [
       'model' => $model,
-      'taskStatus' => $taskStatus
+      'taskStatus' => $taskStatusService->listDropDown()
     ]);
   }
 
   public function actionUpdate($id)
   {
-    $taskService = new TaskService();
     $taskForm = new TaskForm();
 
-    $task = $taskService->get($id);
+    $task = $this->taskService->get($id);
 
     if (!$task) {
       Yii::$app->session->setFlash('error', 'Task not found');
@@ -83,7 +87,7 @@ class TaskController extends Controller
     }
 
     if ($taskForm->load(Yii::$app->request->post())) {
-      $updateTask = $taskService->update($taskForm, $id);
+      $updateTask = $this->taskService->update($taskForm, $id);
 
       if (!$updateTask) {
         Yii::$app->session->setFlash('error', 'Error while update the task');
@@ -93,11 +97,11 @@ class TaskController extends Controller
       }
     }
 
-    $taskStatus = ArrayHelper::map(TaskStatus::find()->all(), 'id', 'title');
+    $taskStatusService = new TaskStatusService();
 
     return $this->render('update', [
       'model' => $taskForm,
-      'taskStatus' => $taskStatus,
+      'taskStatus' => $taskStatusService->listDropDown(),
       'data' => $task
     ]);
   }

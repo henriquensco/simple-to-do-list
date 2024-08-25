@@ -29,15 +29,6 @@ class SignupForm extends Model
         if ($this->validate()) {
             $userService = new UserService();
             return $userService->create($this);
-            // $user = new User();
-            // $user->first_name = $this->first_name;
-            // $user->last_name = $this->last_name;
-            // $user->email = $this->email;
-            // $user->password = $this->password;
-            // //$user->auth_key = \Yii::$app->security->generateRandomString();
-            // if ($user->save()) {
-            //     return $user;
-            // }
         }
         return null;
     }

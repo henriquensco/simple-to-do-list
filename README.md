@@ -68,4 +68,4 @@ Separei a estrutura por *Services*, mantendo uma arquitetura fácil de entender 
 Todos os processo acima facilitaram a implementação da permissão, principalmente os services, para que as tasks sejam exibidas, cadastradas, alteradas e excluídas apenas pelo usuário autenticado, sendo assim, cada usuário tem controle apenas de suas tarefas.
 
 <br/>
-Eai, que tal você me falar o que achou desta ferramenta maneira que te ajudou a organizar suas tarefas de maneira simples?
+Eai, que tal você me falar o que achou desta ferramenta maneira que te ajuda a organizar suas tarefas de maneira simples?

@@ -32,8 +32,16 @@ docker exec -it app-app-1 php yii migrate
 docker exec -it app-app-1 php yii migrate/up
 ```
 
+## Passo 2: Executando seeders
+
+Para o melhor funcionamento da aplicação, é ideal executar as seeders para adicionar os registros necessários no banco de dados, como o usuário padrão e status das tasks.
+
+```bash
+docker exec -it app-app-1 php yii seed/all 
+```
+<br>
 Tudo pronto?
-Basta acessar http://localhost:8000
+Basta acessar <a href="http://localhost:8000">http://localhost:8000</a>
 
 Crie a sua conta e gerencie as suas tarefas de maneira simples e rápida.
 

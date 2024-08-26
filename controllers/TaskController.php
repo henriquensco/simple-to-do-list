@@ -12,13 +12,6 @@ use yii\web\Controller;
 
 class TaskController extends Controller
 {
-  protected TaskService $taskService;
-
-  function __construct()
-  {
-    $this->taskService = new TaskService();
-  }
-
   public function behaviors()
   {
     return [
@@ -55,9 +48,10 @@ class TaskController extends Controller
   public function actionCreate()
   {
     $model = new TaskForm();
+    $taskService = new TaskService();
 
     if ($model->load(Yii::$app->request->post())) {
-      $createTask = $this->taskService->create($model);
+      $createTask = $taskService->create($model);
 
       if ($createTask['success']) {
         Yii::$app->session->setFlash('success', 'New task created');
@@ -77,9 +71,10 @@ class TaskController extends Controller
 
   public function actionUpdate($id)
   {
+    $taskService = new TaskService();
     $taskForm = new TaskForm();
 
-    $task = $this->taskService->get($id);
+    $task = $taskService->get($id);
 
     if (!$task) {
       Yii::$app->session->setFlash('error', 'Task not found');
@@ -87,7 +82,7 @@ class TaskController extends Controller
     }
 
     if ($taskForm->load(Yii::$app->request->post())) {
-      $updateTask = $this->taskService->update($taskForm, $id);
+      $updateTask = $taskService->update($taskForm, $id);
 
       if (!$updateTask) {
         Yii::$app->session->setFlash('error', 'Error while update the task');
